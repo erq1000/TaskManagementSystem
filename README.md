@@ -1,1 +1,1 @@
-# TaskManagementSystem
+TaskManagementSystem is a Flask-based application designed to facilitate efficient task management. It serves as the central hub for initializing the application, configuring routes, and managing the server operations. Through this platform, users can effectively organize, track, and manage tasks, streamlining project workflows and enhancing productivity.
