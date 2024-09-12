@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.exc import SQLAlchemyError
 from dotenv import load_dotenv
 import os
 
@@ -17,6 +18,16 @@ class User(db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
 
+    @staticmethod
+    def add_new_user(username, email):
+        new_user = User(username=username, email=email)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print("Failed to add user:", e)
+
 class Task(db.Model):
     __tablename__ = 'tasks'
 
@@ -28,3 +39,13 @@ class Task(db.Model):
 
     def __repr__(self):
         return f'<Task {self.title}>'
+
+    @staticmethod
+    def add_new_task(title, description, user_id):
+        new_task = Task(title=title, description=description, user_id=user_id)
+        try:
+            db.session.add(new_task)
+            db.session.commit()
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            print("Failed to add task:", e)
