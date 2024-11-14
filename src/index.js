@@ -1,16 +1,8 @@
-// api.js
-
-/**
- * Batch multiple API calls into a single call
- * @param {Array} requests - The requests to batch
- */
 export const batchApiCalls = async (requests) => {
-  // Example payload for the batch API endpoint
   const payload = {
     batch: requests,
   };
 
-  // Replace this URL with your batch API endpoint
   const response = await fetch(`${process.env.REACT_APP_API_ENDPOINT}/batch`, {
     method: 'POST',
     headers: {
@@ -22,21 +14,29 @@ export const batchApiCalls = async (requests) => {
   const data = await response.json();
   return data;
 };
-```
-```javascript
-// DataContext.js
+
+export const createRequest = (endpoint, method = 'GET', body = null) => {
+  return {
+    endpoint,
+    method,
+    body, 
+  };
+};
+
 import React, { createContext, useContext, useState } from 'react';
+import { batchApiCalls, createRequest } from './api'; 
 
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [data, setData] = useState(null);
 
-  const fetchData = async () => {
-    if (data) return data; // Return cached data if available
-    // Replace this with your actual data fetching logic
-    const response = await fetch(process.env.REACT_APP_API_ENDPOINT);
-    const newData = await response.json();
+  const fetchData = async (endpoints = [process.env.REACT_APP_API_ENDPOINT]) => {
+    if (data) return data; 
+
+    const requests = endpoints.map((endpoint) => createRequest(endpoint));
+    const newData = await batchApiCalls(requests);
+
     setData(newData);
     return newData;
   };
@@ -48,20 +48,4 @@ export const DataProvider = ({ children }) => {
   );
 };
 
-// Custom hook to use the data context
 export const useData = () => useContext(DataContext);
-```
-```javascript
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import App from './App';
-import { DataProvider } from './DataContext'; // Import the DataProvider
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-    <React.StrictMode>
-        <DataProvider> {/* Use the DataProvider here */}
-            <App />
-        </DataProvider>
-    </React.StrictMode>
-);
