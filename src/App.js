@@ -1,17 +1,17 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import AppHeader from './components/AppHeader';
-import MainContent from './components/MainContent';
-import Footer from './components/Footer';
+import Header from './components/Header';
+import TaskList from './components/TaskList';
+import PageFooter from './components/PageFooter';
 
-function App() {
+function TaskManagerApp() {
     return (
-        <div className="app-container">
-            <AppHeader />
-            <MainContent />
-            <Footer />
+        <div className="task-manager-container">
+            <Header />
+            <TaskList />
+            <PageFooter />
         </div>
     );
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<TaskManagerApp />, document.getElementById('root'));
